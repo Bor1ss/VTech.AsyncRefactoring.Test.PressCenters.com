@@ -18,17 +18,20 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("/", ".center-part h6 a.news-title");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async System.Threading.Tasks.Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var i = 1; i < 1520; i++)
             {
                 var news = this.GetPublication($"https://www.cpdp.bg/index.php?p=news_view&aid={i}");
                 if (news != null)
                 {
-                    yield return news;
+                    result.Add(news);
                     Console.WriteLine($"{i} => {news.Title}");
                 }
             }
+
+            return result;
         }
 
         internal override string ExtractIdFromUrl(string url) => this.GetUrlParameterValue(url, "aid");

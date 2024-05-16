@@ -17,17 +17,20 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("articles", "article a");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async System.Threading.Tasks.Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var i = 304; i <= 917; i++)
             {
                 var news = this.GetPublications($"bg/pr_bg/issues/{i}/", "h3 a", "bg/articles");
                 Console.WriteLine($"№{i} => {news.Count} news ({news.DefaultIfEmpty().Min(x => x?.PostDate)} - {news.DefaultIfEmpty().Max(x => x?.PostDate)})");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    result.Add(remoteNews);
                 }
             }
+
+            return result;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

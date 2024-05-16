@@ -7,10 +7,10 @@
     public class CnnMainNewsProviderTests
     {
         [Fact]
-        public void GetMainNewsShouldWorkCorrectly()
+        public async void GetMainNewsShouldWorkCorrectly()
         {
             var provider = new CnnMainNewsProvider();
-            var news = provider.GetMainNews();
+            var news = await provider.GetMainNews();
             Assert.NotNull(news.Title);
             Assert.True(news.Title.Length >= 10);
             Assert.Contains("cnn.com", news.OriginalUrl);

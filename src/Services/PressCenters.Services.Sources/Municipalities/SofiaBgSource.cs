@@ -16,8 +16,9 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("news", ".portlet-body .row .row a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async System.Threading.Tasks.Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             var newsCategories = new (string Url, string Instance)[]
                                      {
                                          ("news-archive-2016", "hultJKe9uK9Q"),
@@ -53,7 +54,7 @@
                             remoteNews.PostDate = DateTime.ParseExact(timeAsString, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                         }
 
-                        yield return remoteNews;
+                        result.Add(remoteNews);
                     }
 
                     if (!news.Any())
@@ -62,6 +63,8 @@
                     }
                 }
             }
+
+            return result;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

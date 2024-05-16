@@ -1,12 +1,14 @@
-﻿namespace PressCenters.Services.Sources.MainNews
+﻿using System.Threading.Tasks;
+
+namespace PressCenters.Services.Sources.MainNews
 {
     public class EuronewsMainNewsProvider : BaseMainNewsProvider
     {
         public override string BaseUrl { get; } = "https://www.euronews.com";
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNews()
         {
-            var document = this.GetDocument(this.BaseUrl + "/?PageSpeed=noscript");
+            var document = await this.GetDocument(this.BaseUrl + "/?PageSpeed=noscript");
 
             var titleElement = document.QuerySelector(".c-first-topstory .media__main h1.media__body__title a")
                                ?? document.QuerySelector(".m-object__title__link--big-title");

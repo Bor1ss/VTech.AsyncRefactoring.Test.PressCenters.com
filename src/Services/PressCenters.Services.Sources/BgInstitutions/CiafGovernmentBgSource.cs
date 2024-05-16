@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     /// <summary>
@@ -18,17 +19,20 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("aktualno/novini", "article.article a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var i = 1; i <= 46; i++)
             {
                 var news = this.GetPublications($"aktualno/novini?page={i}", "article.article a");
                 Console.WriteLine($"Page {i} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    result.Add(remoteNews);
                 }
             }
+
+            return result;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

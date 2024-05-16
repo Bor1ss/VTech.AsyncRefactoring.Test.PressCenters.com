@@ -3,12 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using PressCenters.Data.Models;
 
     public class MainNewsSourcesSeeder : ISeeder
     {
-        public void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public async Task Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        {
+            await Task.Run(() => this.SeedInternal(dbContext, serviceProvider));
+        }
+
+        private void SeedInternal(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             var mainNewsSources = new List<(string Name, string Url, string TypeName)>
                                   {

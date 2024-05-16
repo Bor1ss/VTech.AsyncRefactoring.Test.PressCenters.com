@@ -19,17 +19,20 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("novini", ".post__widget .post__title a");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async System.Threading.Tasks.Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var page = 1; page <= 10; page++)
             {
                 var news = this.GetPublications($"novini?page={page}", ".page-content .post__title a");
                 Console.WriteLine($"Page {page} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    result.Add(remoteNews);
                 }
             }
+
+            return result;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

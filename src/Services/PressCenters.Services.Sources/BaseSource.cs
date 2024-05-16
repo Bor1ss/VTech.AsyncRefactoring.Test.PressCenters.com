@@ -8,7 +8,7 @@ namespace PressCenters.Services.Sources
     using System.Net;
     using System.Text;
     using System.Text.RegularExpressions;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
     using AngleSharp.Html.Dom;
     using AngleSharp.Html.Parser;
@@ -34,9 +34,9 @@ namespace PressCenters.Services.Sources
 
         public abstract IEnumerable<RemoteNews> GetLatestPublications();
 
-        public virtual IEnumerable<RemoteNews> GetAllPublications()
+        public virtual async Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
-            return new List<RemoteNews>();
+            return await Task.FromResult(new List<RemoteNews>());
         }
 
         public RemoteNews GetPublication(string url)

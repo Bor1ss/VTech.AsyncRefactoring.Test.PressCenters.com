@@ -19,8 +19,9 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/novini.html", ".NewsSummaryLink a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async System.Threading.Tasks.Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var page = 1; page <= 92; page++)
             {
                 var news = this.GetPublications(
@@ -28,11 +29,13 @@
                     ".NewsSummaryLink a");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    result.Add(remoteNews);
                 }
 
                 Console.WriteLine($"Page {page} => {news.Count} news");
             }
+
+            return result;
         }
 
         internal override string ExtractIdFromUrl(string url) =>

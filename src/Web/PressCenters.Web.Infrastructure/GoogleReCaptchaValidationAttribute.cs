@@ -7,7 +7,6 @@
     using System.Net.Http;
     using System.Text.Json;
     using System.Text.Json.Serialization;
-
     using Microsoft.Extensions.Configuration;
 
     public class GoogleReCaptchaValidationAttribute : ValidationAttribute
@@ -37,8 +36,7 @@
                         new KeyValuePair<string, string>("response", value.ToString()),
                         //// new KeyValuePair<string, string>("remoteip", remoteIp),
                     });
-            var httpResponse = httpClient.PostAsync($"https://www.google.com/recaptcha/api/siteverify", content)
-                .GetAwaiter().GetResult();
+            var httpResponse = httpClient.PostAsync($"https://www.google.com/recaptcha/api/siteverify", content).GetAwaiter().GetResult();
             if (httpResponse.StatusCode != HttpStatusCode.OK)
             {
                 return new ValidationResult(
@@ -46,7 +44,7 @@
                     new[] { validationContext.MemberName });
             }
 
-            var jsonResponse = httpResponse.Content.ReadAsStringAsync().Result;
+            var jsonResponse = httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             var siteVerifyResponse = JsonSerializer.Deserialize<ReCaptchaSiteVerifyResponse>(jsonResponse);
             return siteVerifyResponse.Success
                        ? ValidationResult.Success

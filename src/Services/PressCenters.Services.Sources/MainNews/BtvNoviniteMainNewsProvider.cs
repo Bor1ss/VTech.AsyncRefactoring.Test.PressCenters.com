@@ -1,12 +1,14 @@
-﻿namespace PressCenters.Services.Sources.MainNews
+﻿using System.Threading.Tasks;
+
+namespace PressCenters.Services.Sources.MainNews
 {
     public class BtvNoviniteMainNewsProvider : BaseMainNewsProvider
     {
         public override string BaseUrl { get; } = "https://btvnovinite.bg";
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNews()
         {
-            var document = this.GetDocument(this.BaseUrl);
+            var document = await this.GetDocument(this.BaseUrl);
 
             var titleElement = document.QuerySelector(".news-article h3");
             var title = titleElement.TextContent.Trim();

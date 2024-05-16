@@ -17,8 +17,9 @@
         public override IEnumerable<RemoteNews> GetLatestPublications()
             => this.GetPublications("page/view/2574", ".right_info .row a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async System.Threading.Tasks.Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var i = 1; i <= 365; i++)
             {
                 var document = this.Parser.ParseDocument(this.ReadStringFromUrl($"{this.BaseUrl}page/view/2574?p={i}"));
@@ -37,12 +38,14 @@
 
                     newsCount++;
                     remoteNews.PostDate = date;
-                    yield return remoteNews;
+                    result.Add(remoteNews);
                 }
 
                 Console.WriteLine($"Page {i} => {newsCount} news");
                 Thread.Sleep(1500);
             }
+
+            return result;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

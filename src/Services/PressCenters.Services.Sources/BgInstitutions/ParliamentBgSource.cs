@@ -31,8 +31,9 @@
             return news;
         }
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async System.Threading.Tasks.Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var i = 1; i <= 4625; i++)
             {
                 var remoteNews = this.GetPublication($"{this.BaseUrl}bg/news/ID/{i}");
@@ -42,8 +43,10 @@
                 }
 
                 Console.WriteLine($"№{i} => {remoteNews.PostDate.ToShortDateString()} => {remoteNews.Title}");
-                yield return remoteNews;
+                result.Add( remoteNews );
             }
+
+            return result;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

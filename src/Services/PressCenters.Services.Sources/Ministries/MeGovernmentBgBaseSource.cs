@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     using PressCenters.Common;
@@ -22,8 +22,9 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications(this.NewsListUrl, ".listing-article h2 a");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var i = 1; i <= this.NewsListPagesCount; i++)
             {
                 var page = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{{\"page\":{i}}}"));
@@ -31,9 +32,11 @@
                 Console.WriteLine($"Page {i} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    result.Add(remoteNews);
                 }
             }
+
+            return result;
         }
 
         internal override string ExtractIdFromUrl(string url) => url.GetLastStringBetween("-", ".html", url);

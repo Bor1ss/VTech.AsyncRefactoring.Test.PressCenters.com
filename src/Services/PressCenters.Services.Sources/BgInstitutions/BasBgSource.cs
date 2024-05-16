@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     public class BasBgSource : BaseSource
@@ -13,8 +13,9 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications(string.Empty, ".fusion-recent-posts article.post h4 a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var page = 1; page <= 36; page++)
             {
                 var news = this.GetPublications(
@@ -23,9 +24,11 @@
                 Console.WriteLine($"Page {page} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    result.Add(remoteNews);
                 }
             }
+
+            return result;
         }
 
         internal override string ExtractIdFromUrl(string url) => this.GetUrlParameterValue(url, "p");

@@ -43,7 +43,7 @@
                 }
             }
 
-            var targetRequestMessage = CreateTargetMessage(context.Request, targetUri, replace);
+            var targetRequestMessage = await CreateTargetMessage(context.Request, targetUri, replace);
             using (var responseMessage = await HttpClient.SendAsync(
                                              targetRequestMessage,
                                              HttpCompletionOption.ResponseHeadersRead,
@@ -54,7 +54,7 @@
             }
         }
 
-        private static HttpRequestMessage CreateTargetMessage(HttpRequest originalRequest, Uri targetUri, bool replace)
+        private static async Task<HttpRequestMessage> CreateTargetMessage(HttpRequest originalRequest, Uri targetUri, bool replace)
         {
             var stripHeaders = new List<string>();
             if (replace)
@@ -85,7 +85,7 @@
 
             if (originalRequest.ContentType?.StartsWith("application/json") == true)
             {
-                var stringContent = GetRawBodyAsync(originalRequest).GetAwaiter().GetResult();
+                var stringContent = await GetRawBodyAsync(originalRequest);
                 requestMessage.Content = new StringContent(stringContent, Encoding.UTF8, "application/json");
             }
 

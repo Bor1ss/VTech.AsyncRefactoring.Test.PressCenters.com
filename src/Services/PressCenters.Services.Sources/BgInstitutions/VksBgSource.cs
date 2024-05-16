@@ -17,7 +17,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications()
             => this.GetPublications("novini.html", "#Content p a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async System.Threading.Tasks.Task<IEnumerable<RemoteNews>> GetAllPublications()
             => this.GetPublications("novini.html", "#Content p a");
 
         internal override string ExtractIdFromUrl(string url) => url.GetLastStringBetween("/", ".html", url);

@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using System.Net.Http.Headers;
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     public class CemBgSource : BaseSource
@@ -13,17 +14,20 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("newsbg", ".boxNews a", count: 5, urlShouldContain: "displaynewsbg");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublications()
         {
+            var result = new List<RemoteNews>();
             for (var page = 0; page <= 34; page++)
             {
                 var news = this.GetPublications($"newsbg/page-{page}", ".boxNews a", urlShouldContain: "displaynewsbg");
                 Console.WriteLine($"Page {page} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    result.Add(remoteNews);
                 }
             }
+
+            return result;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)
