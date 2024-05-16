@@ -3,12 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using PressCenters.Data.Models;
 
     public class SourcesSeeder : ISeeder
     {
-        public void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public async Task Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             var sources =
                 new
