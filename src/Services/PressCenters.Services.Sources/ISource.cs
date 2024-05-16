@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources
+namespace PressCenters.Services.Sources
 {
+    using System.Threading.Tasks;
+
     using System.Collections.Generic;
 
     public interface ISource
@@ -8,7 +10,7 @@
 
         IEnumerable<RemoteNews> GetLatestPublications();
 
-        IEnumerable<RemoteNews> GetAllPublications();
+        Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync();
 
         RemoteNews GetPublication(string url);
     }

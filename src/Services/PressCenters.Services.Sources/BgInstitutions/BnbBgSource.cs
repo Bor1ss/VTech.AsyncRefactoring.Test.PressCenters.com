@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgInstitutions
+namespace PressCenters.Services.Sources.BgInstitutions
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -23,8 +25,9 @@
             return news;
         }
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             for (var year = 1998; year <= DateTime.UtcNow.Year; year++)
             {
                 var document = this.Parser.ParseDocument(this.ReadStringFromUrl($"{this.BaseUrl}AboutUs/PressOffice/POPressReleases/POPRDate/index.htm?forYear={year}"));
@@ -35,9 +38,10 @@
                 Console.WriteLine($"Page {year} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
             }
+            return GetAllPublicationsResult;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

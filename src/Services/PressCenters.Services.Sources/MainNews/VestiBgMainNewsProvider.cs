@@ -1,12 +1,14 @@
-﻿namespace PressCenters.Services.Sources.MainNews
+using System.Threading.Tasks;
+
+namespace PressCenters.Services.Sources.MainNews
 {
     public class VestiBgMainNewsProvider : BaseMainNewsProvider
     {
         public override string BaseUrl { get; } = "https://www.vesti.bg";
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNewsAsync()
         {
-            var document = this.GetDocument(this.BaseUrl);
+            var document = await this.GetDocumentAsync(this.BaseUrl);
 
             var titleElement = document.QuerySelector(".leading h2");
             var title = titleElement.TextContent.Trim();

@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgInstitutions
+namespace PressCenters.Services.Sources.BgInstitutions
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -16,8 +18,9 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("category/novini/", ".entry-title a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             for (var i = 1; i <= 52; i++)
             {
                 var document = this.Parser.ParseDocument(this.ReadStringFromUrl($"{this.BaseUrl}category/novini/page/{i}/"));
@@ -37,11 +40,12 @@
 
                     newsCount++;
                     remoteNews.PostDate = date;
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
 
                 Console.WriteLine($"Page {i} => {newsCount} news");
             }
+            return GetAllPublicationsResult;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

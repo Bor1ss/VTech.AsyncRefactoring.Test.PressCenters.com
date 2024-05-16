@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.Municipalities
+namespace PressCenters.Services.Sources.Municipalities
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -16,8 +18,9 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("news", ".portlet-body .row .row a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             var newsCategories = new (string Url, string Instance)[]
                                      {
                                          ("news-archive-2016", "hultJKe9uK9Q"),
@@ -53,7 +56,7 @@
                             remoteNews.PostDate = DateTime.ParseExact(timeAsString, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                         }
 
-                        yield return remoteNews;
+                        GetAllPublicationsResult.Add(remoteNews);
                     }
 
                     if (!news.Any())
@@ -62,6 +65,7 @@
                     }
                 }
             }
+            return GetAllPublicationsResult;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

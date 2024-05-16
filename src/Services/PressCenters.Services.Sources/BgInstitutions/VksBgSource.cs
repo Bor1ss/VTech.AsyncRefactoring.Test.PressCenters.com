@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgInstitutions
+namespace PressCenters.Services.Sources.BgInstitutions
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -17,7 +19,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications()
             => this.GetPublications("novini.html", "#Content p a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
             => this.GetPublications("novini.html", "#Content p a");
 
         internal override string ExtractIdFromUrl(string url) => url.GetLastStringBetween("/", ".html", url);
