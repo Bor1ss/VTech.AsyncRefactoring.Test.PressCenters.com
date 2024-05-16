@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.Ministries
+namespace PressCenters.Services.Sources.Ministries
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -20,17 +22,19 @@
 
         public override IEnumerable<RemoteNews> GetLatestPublications() => this.GetNews($"{this.BaseUrl}bg/news.php", 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             for (var date = DateTime.UtcNow; date >= new DateTime(2011, 1, 1); date = date.AddMonths(-1))
             {
                 var news = this.GetNews($"{this.BaseUrl}bg/news_archive.php?fn_month={date.Month}&fn_year={date.Year}");
                 Console.WriteLine($"{date:yyyy, MMM} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
             }
+            return GetAllPublicationsResult;
         }
 
         internal override string ExtractIdFromUrl(string url) => this.GetUrlParameterValue(url, "fn_id");

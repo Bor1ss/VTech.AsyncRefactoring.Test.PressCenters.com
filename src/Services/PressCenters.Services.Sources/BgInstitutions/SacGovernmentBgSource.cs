@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgInstitutions
+namespace PressCenters.Services.Sources.BgInstitutions
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -14,8 +16,9 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("pages/bg/newsreel", "p a", "/news/", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             for (var i = 2010; i <= 2022; i++)
             {
                 var document = this.Parser.ParseDocument(this.ReadStringFromUrl($"{this.BaseUrl}home.nsf/0/FF9D414158A0A77142258159004DE2BC?opendocument&year={i}"));
@@ -39,11 +42,12 @@
                     }
 
                     remoteNews.PostDate = date;
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
 
                 Console.WriteLine($"Year {i} => {newsCount} news");
             }
+            return GetAllPublicationsResult;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

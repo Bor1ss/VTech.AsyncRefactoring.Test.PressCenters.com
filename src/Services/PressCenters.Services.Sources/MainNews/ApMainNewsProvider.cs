@@ -1,12 +1,14 @@
-﻿namespace PressCenters.Services.Sources.MainNews
+using System.Threading.Tasks;
+
+namespace PressCenters.Services.Sources.MainNews
 {
     public class ApMainNewsProvider : BaseMainNewsProvider
     {
         public override string BaseUrl { get; } = "https://www.apnews.com";
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNewsAsync()
         {
-            var document = this.GetDocument(this.BaseUrl);
+            var document = await this.GetDocumentAsync(this.BaseUrl);
 
             var titleElement = document.QuerySelector(".PageListStandardE-leadPromo-info a");
             var title = titleElement.TextContent.Trim();

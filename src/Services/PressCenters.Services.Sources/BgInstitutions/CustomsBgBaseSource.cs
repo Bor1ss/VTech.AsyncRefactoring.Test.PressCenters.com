@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgInstitutions
+namespace PressCenters.Services.Sources.BgInstitutions
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -25,17 +27,19 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetNews(DateTime.UtcNow.AddMonths(-2), DateTime.UtcNow.AddDays(1), 6);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             for (var year = 2015; year <= 2019; year++)
             {
                 var news = this.GetNews(new DateTime(year, 1, 1), new DateTime(year + 1, 1, 1), 10000);
                 Console.WriteLine($"Year {year} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
             }
+            return GetAllPublicationsResult;
         }
 
         internal override string ExtractIdFromUrl(string url)

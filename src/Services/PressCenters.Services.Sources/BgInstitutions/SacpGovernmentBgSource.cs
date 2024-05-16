@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgInstitutions
+namespace PressCenters.Services.Sources.BgInstitutions
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -16,17 +18,19 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("новини", ".view-content a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             for (var i = 0; i <= 92; i++)
             {
                 var news = this.GetPublications($"новини?page={i}", "h2 a");
                 Console.WriteLine($"Page {i} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
             }
+            return GetAllPublicationsResult;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

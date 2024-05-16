@@ -1,4 +1,4 @@
-﻿namespace Sandbox.Code
+namespace Sandbox.Code
 {
     using System;
     using System.Linq;
@@ -28,7 +28,7 @@
 
                 var sourceProvider = ReflectionHelpers.GetInstance<BaseSource>(source.TypeName);
                 Console.WriteLine($"Starting {source.TypeName}.GetAllPublications...");
-                var news = sourceProvider.GetAllPublications();
+                var news = await sourceProvider.GetAllPublicationsAsync();
                 foreach (var remoteNews in news)
                 {
                     var newsId = await newsService.AddAsync(remoteNews, source.Id);

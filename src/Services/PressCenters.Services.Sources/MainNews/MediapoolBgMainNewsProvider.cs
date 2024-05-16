@@ -1,12 +1,14 @@
-﻿namespace PressCenters.Services.Sources.MainNews
+using System.Threading.Tasks;
+
+namespace PressCenters.Services.Sources.MainNews
 {
     public class MediapoolBgMainNewsProvider : BaseMainNewsProvider
     {
         public override string BaseUrl { get; } = "https://www.mediapool.bg";
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNewsAsync()
         {
-            var document = this.GetDocument(this.BaseUrl);
+            var document = await this.GetDocumentAsync(this.BaseUrl);
 
             var titleElement = document.QuerySelector(".c-article-item_accent .c-article-item__content a");
             var title = titleElement.TextContent.Trim().Trim('.').Trim();

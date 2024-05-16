@@ -1,7 +1,9 @@
-﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("PressCenters.Services.Sources.Tests")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("PressCenters.Services.Sources.Tests")]
 
 namespace PressCenters.Services.Sources
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -34,7 +36,7 @@ namespace PressCenters.Services.Sources
 
         public abstract IEnumerable<RemoteNews> GetLatestPublications();
 
-        public virtual IEnumerable<RemoteNews> GetAllPublications()
+        public virtual async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
             return new List<RemoteNews>();
         }

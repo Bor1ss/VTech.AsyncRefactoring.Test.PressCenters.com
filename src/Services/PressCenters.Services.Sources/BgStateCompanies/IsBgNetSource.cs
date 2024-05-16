@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgStateCompanies
+namespace PressCenters.Services.Sources.BgStateCompanies
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -16,21 +18,24 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/news", ".news a");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             this.Headers = new List<(string Header, string Value)> { ("x-requested-with", "XMLHttpRequest") };
             for (var i = 1; i <= 25; i++)
             {
                 var news = this.GetPublications($"bg/news?page={i}", ".news a");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
 
                 Console.WriteLine($"page {i} => {news.Count} news.");
             }
 
             this.Headers = null;
+
+            return GetAllPublicationsResult;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)
