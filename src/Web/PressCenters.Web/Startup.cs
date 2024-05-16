@@ -5,7 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-
+    using System.Threading.Tasks;
     using Hangfire;
     using Hangfire.Console;
     using Hangfire.Dashboard;
@@ -105,7 +105,7 @@
             services.AddTransient<ISlugGenerator, SlugGenerator>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRecurringJobManager recurringJobManager)
+        public async Task Configure(IApplicationBuilder app, IWebHostEnvironment env, IRecurringJobManager recurringJobManager)
         {
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
@@ -114,7 +114,7 @@
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 dbContext.Database.Migrate();
-                ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
+                await ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
                 SeedHangfireJobs(recurringJobManager, dbContext);
             }
 

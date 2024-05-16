@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     using PressCenters.Common;
@@ -20,17 +20,17 @@
 
         public override IEnumerable<RemoteNews> GetLatestPublications() => this.GetNews($"{this.BaseUrl}bg/news.php", 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var date = DateTime.UtcNow; date >= new DateTime(2011, 1, 1); date = date.AddMonths(-1))
             {
                 var news = this.GetNews($"{this.BaseUrl}bg/news_archive.php?fn_month={date.Month}&fn_year={date.Year}");
                 Console.WriteLine($"{date:yyyy, MMM} => {news.Count} news");
-                foreach (var remoteNews in news)
-                {
-                    yield return remoteNews;
-                }
+                allNews.AddRange(news);
             }
+            return allNews;
         }
 
         internal override string ExtractIdFromUrl(string url) => this.GetUrlParameterValue(url, "fn_id");

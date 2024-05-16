@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     /// <summary>
@@ -17,17 +17,17 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/press-center/novini/", ".news h2 a", "bg/press-center/novini");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 1; i <= 731; i++)
             {
                 var news = this.GetPublications($"bg/press-center/novini/?page={i}", ".news h2 a", "bg/press-center/novini");
                 Console.WriteLine($"Page {i} => {news.Count} news");
-                foreach (var remoteNews in news)
-                {
-                    yield return remoteNews;
-                }
+                allNews.AddRange(news);
             }
+            return allNews;
         }
 
         internal override string ExtractIdFromUrl(string url)

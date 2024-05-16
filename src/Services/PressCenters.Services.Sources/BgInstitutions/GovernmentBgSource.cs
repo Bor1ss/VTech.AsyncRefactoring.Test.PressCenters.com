@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     public class GovernmentBgSource : BaseSource
@@ -14,17 +14,18 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/prestsentar/novini", ".articles .item a", count: 8);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 1; i <= 60; i++)
             {
                 var news = this.GetPublications($"bg/prestsentar/novini?page={i}", ".articles .item a");
                 Console.WriteLine($"Page {i} => {news.Count} news");
-                foreach (var remoteNews in news)
-                {
-                    yield return remoteNews;
-                }
+                allNews.AddRange(news);
             }
+
+            return allNews;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

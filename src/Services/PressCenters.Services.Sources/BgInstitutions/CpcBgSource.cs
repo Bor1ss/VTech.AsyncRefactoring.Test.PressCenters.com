@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     /// <summary>
@@ -15,8 +15,10 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("news", ".news-summary-link");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var page = 1; page <= 30; page++)
             {
                 var news = this.GetPublications($"news?page={page}", ".news-summary-link");
@@ -24,9 +26,11 @@
                 foreach (var remoteNews in news)
                 {
                     remoteNews.OriginalUrl = remoteNews.OriginalUrl.Split('?')[0];
-                    yield return remoteNews;
+                    allNews.Add(remoteNews);
                 }
             }
+
+            return Task.FromResult(allNews);
         }
 
         internal override string ExtractIdFromUrl(string url) => new Uri(url.Trim().Trim('/')).Segments[^1].Split('-')[1];

@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     /// <summary>
@@ -21,8 +21,10 @@
                 "#DivEventList .RadGridItem h3 a",
                 "Pages/Press/News/Default.aspx");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 1; i <= 4089; i++)
             {
                 if (i == 4088)
@@ -38,8 +40,9 @@
                 }
 
                 Console.WriteLine($"News {i} => {remoteNews.PostDate.ToShortDateString()} => {remoteNews.Title}");
-                yield return remoteNews;
+                allNews.Add(remoteNews);
             }
+            return allNews;
         }
 
         internal override string ExtractIdFromUrl(string url) => this.GetUrlParameterValue(url, "evntid");

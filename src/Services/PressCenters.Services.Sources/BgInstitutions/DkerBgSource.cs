@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Net;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     using PressCenters.Common;
@@ -19,20 +19,20 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/novini.html", ".NewsSummaryLink a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var page = 1; page <= 92; page++)
             {
                 var news = this.GetPublications(
                     $"index.php?mact=News,m14562,default,1&m14562category=news&m14562summarytemplate=news&m14562number=8&m14562detailpage=65&m14562pagenumber={page}&m14562returnid=65&page=65",
                     ".NewsSummaryLink a");
-                foreach (var remoteNews in news)
-                {
-                    yield return remoteNews;
-                }
-
+                allNews.AddRange(news);
+                
                 Console.WriteLine($"Page {page} => {news.Count} news");
             }
+            return allNews;
         }
 
         internal override string ExtractIdFromUrl(string url) =>

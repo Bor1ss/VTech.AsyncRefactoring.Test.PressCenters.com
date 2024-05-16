@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     internal class VasBgSource : BaseSource
@@ -13,8 +13,10 @@
         public override IEnumerable<RemoteNews> GetLatestPublications()
             => this.GetPublications("bg/c/news", ".itemscontainer .card-title a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 1; i <= 45; i++)
             {
                 var document = this.Parser.ParseDocument(this.ReadStringFromUrl($"{this.BaseUrl}bg/c/news?page={i}"));
@@ -34,11 +36,12 @@
 
                     newsCount++;
                     remoteNews.PostDate = date;
-                    yield return remoteNews;
+                    allNews.Add(remoteNews);
                 }
 
                 Console.WriteLine($"Page {i} => {newsCount} news");
             }
+            return allNews;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

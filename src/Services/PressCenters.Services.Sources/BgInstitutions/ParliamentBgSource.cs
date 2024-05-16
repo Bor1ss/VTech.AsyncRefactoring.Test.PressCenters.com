@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     using Newtonsoft.Json;
@@ -31,8 +31,10 @@
             return news;
         }
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 1; i <= 4625; i++)
             {
                 var remoteNews = this.GetPublication($"{this.BaseUrl}bg/news/ID/{i}");
@@ -42,8 +44,10 @@
                 }
 
                 Console.WriteLine($"№{i} => {remoteNews.PostDate.ToShortDateString()} => {remoteNews.Title}");
-                yield return remoteNews;
+                allNews.Add(remoteNews);
             }
+
+            return allNews;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

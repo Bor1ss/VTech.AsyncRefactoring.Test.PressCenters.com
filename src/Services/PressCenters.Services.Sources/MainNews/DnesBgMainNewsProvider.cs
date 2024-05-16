@@ -1,15 +1,16 @@
 ﻿namespace PressCenters.Services.Sources.MainNews
 {
     using System.Text;
+    using System.Threading.Tasks;
 
     public class DnesBgMainNewsProvider : BaseMainNewsProvider
     {
         public override string BaseUrl { get; } = "https://www.dnes.bg";
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNews()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            var document = this.GetDocument(this.BaseUrl);
+            var document = await this.GetDocument(this.BaseUrl);
 
             var titleElement = document.QuerySelector(".top-news-wrapper .left .top-news .image-title > a");
             var title = titleElement.TextContent.Trim();

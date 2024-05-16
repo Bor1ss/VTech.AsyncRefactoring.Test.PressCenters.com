@@ -5,7 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Net;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
     using AngleSharp.Xml.Parser;
 
@@ -30,17 +30,17 @@
             return news;
         }
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 1; i <= 250; i++)
             {
                 var news = this.GetPublications($"page/{i}", "h2.entry-title a");
                 Console.WriteLine($"№{i} => {news.Count} news ({news.DefaultIfEmpty().Min(x => x?.PostDate)} - {news.DefaultIfEmpty().Max(x => x?.PostDate)})");
-                foreach (var remoteNews in news)
-                {
-                    yield return remoteNews;
-                }
+                allNews.AddRange(news);
             }
+            return allNews;
         }
 
         internal override string ExtractIdFromUrl(string url) =>

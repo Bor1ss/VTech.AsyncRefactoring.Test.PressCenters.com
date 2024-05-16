@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     public class SacGovernmentBgSource : BaseSource
@@ -14,8 +14,10 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("pages/bg/newsreel", "p a", "/news/", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 2010; i <= 2022; i++)
             {
                 var document = this.Parser.ParseDocument(this.ReadStringFromUrl($"{this.BaseUrl}home.nsf/0/FF9D414158A0A77142258159004DE2BC?opendocument&year={i}"));
@@ -39,11 +41,13 @@
                     }
 
                     remoteNews.PostDate = date;
-                    yield return remoteNews;
+                    allNews.Add(remoteNews);
                 }
 
                 Console.WriteLine($"Year {i} => {newsCount} news");
             }
+
+            return allNews;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

@@ -2,13 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
     public static class ApplicationDbContextSeeder
     {
-        public static void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public static async Task Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             if (dbContext == null)
             {
@@ -31,7 +31,7 @@
 
             foreach (var seeder in seeders)
             {
-                seeder.Seed(dbContext, serviceProvider);
+                await seeder.Seed(dbContext, serviceProvider);
                 logger.LogInformation($"Seeder {seeder.GetType().Name} done.");
                 dbContext.SaveChanges();
             }

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     using Newtonsoft.Json;
@@ -25,17 +25,18 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetNews(DateTime.UtcNow.AddMonths(-2), DateTime.UtcNow.AddDays(1), 6);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var year = 2015; year <= 2019; year++)
             {
                 var news = this.GetNews(new DateTime(year, 1, 1), new DateTime(year + 1, 1, 1), 10000);
                 Console.WriteLine($"Year {year} => {news.Count} news");
-                foreach (var remoteNews in news)
-                {
-                    yield return remoteNews;
-                }
+                allNews.AddRange(news);
             }
+
+            return allNews;
         }
 
         internal override string ExtractIdFromUrl(string url)

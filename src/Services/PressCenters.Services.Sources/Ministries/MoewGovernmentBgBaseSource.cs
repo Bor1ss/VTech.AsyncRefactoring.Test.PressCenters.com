@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     public abstract class MoewGovernmentBgBaseSource : BaseSource
@@ -19,17 +19,17 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications(this.NewsListUrl, "ul.news-list-internal li a.green-btn", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 1; i <= this.NewsListPagesCount; i++)
             {
                 var news = this.GetPublications($"{this.NewsListUrl}page/{i}/", "ul.news-list-internal li a.green-btn");
                 Console.WriteLine($"Page {i} => {news.Count} news");
-                foreach (var remoteNews in news)
-                {
-                    yield return remoteNews;
-                }
+                allNews.AddRange(news);
             }
+            return allNews;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

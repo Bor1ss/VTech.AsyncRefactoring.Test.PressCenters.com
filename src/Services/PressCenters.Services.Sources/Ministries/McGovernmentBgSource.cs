@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     /// <summary>
@@ -28,17 +28,17 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("index.php", ".conNews a.moreLink");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 1; i <= 1030; i++)
             {
                 var news = this.GetPublications($"index.php?p={i}", ".conNews a.moreLink");
                 Console.WriteLine($"Page {i} => {news.Count} news");
-                foreach (var remoteNews in news)
-                {
-                    yield return remoteNews;
-                }
+                allNews.AddRange(news);
             }
+            return allNews;
         }
 
         internal override string ExtractIdFromUrl(string url) => this.GetUrlParameterValue(url, "n");

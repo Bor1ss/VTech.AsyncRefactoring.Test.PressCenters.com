@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
+    using Microsoft.EntityFrameworkCore;
     using PressCenters.Data.Models;
 
     public class SourcesSeeder : ISeeder
     {
-        public void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public async Task Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             var sources =
                 new
@@ -281,7 +282,7 @@
 
             foreach (var source in sources)
             {
-                var dbSource = dbContext.Sources.FirstOrDefault(x => x.TypeName == source.TypeName);
+                var dbSource = await dbContext.Sources.FirstOrDefaultAsync(x => x.TypeName == source.TypeName);
                 if (dbSource == null)
                 {
                     dbContext.Sources.Add(

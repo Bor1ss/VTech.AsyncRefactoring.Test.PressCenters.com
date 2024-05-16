@@ -1,7 +1,7 @@
 ﻿namespace PressCenters.Services.Sources.MainNews
 {
     using System.Linq;
-
+    using System.Threading.Tasks;
     using AngleSharp;
 
     using PressCenters.Common;
@@ -10,9 +10,9 @@
     {
         public override string BaseUrl { get; } = "https://www.reuters.com";
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNews()
         {
-            var document = this.GetDocument(this.BaseUrl);
+            var document = await this.GetDocument(this.BaseUrl);
 
             var titleElement = document.GetElementsByTagName("h3").FirstOrDefault(x => x.ClassName.Contains("MediaStoryCard__heading__"));
             var title = titleElement?.TextContent.Trim();

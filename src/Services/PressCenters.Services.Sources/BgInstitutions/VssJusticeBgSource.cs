@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Threading;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     /// <summary>
@@ -17,8 +17,10 @@
         public override IEnumerable<RemoteNews> GetLatestPublications()
             => this.GetPublications("page/view/2574", ".right_info .row a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 1; i <= 365; i++)
             {
                 var document = this.Parser.ParseDocument(this.ReadStringFromUrl($"{this.BaseUrl}page/view/2574?p={i}"));
@@ -37,12 +39,13 @@
 
                     newsCount++;
                     remoteNews.PostDate = date;
-                    yield return remoteNews;
+                    allNews.Add(remoteNews);
                 }
 
                 Console.WriteLine($"Page {i} => {newsCount} news");
-                Thread.Sleep(1500);
+                await Task.Delay(1500);
             }
+            return allNews;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

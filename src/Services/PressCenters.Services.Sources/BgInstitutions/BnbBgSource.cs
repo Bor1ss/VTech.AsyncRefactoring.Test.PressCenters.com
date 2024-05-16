@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     /// <summary>
@@ -23,8 +23,10 @@
             return news;
         }
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var year = 1998; year <= DateTime.UtcNow.Year; year++)
             {
                 var document = this.Parser.ParseDocument(this.ReadStringFromUrl($"{this.BaseUrl}AboutUs/PressOffice/POPressReleases/POPRDate/index.htm?forYear={year}"));
@@ -33,11 +35,10 @@
                 var news = links.Select(this.GetPublication).Where(x => x != null).ToList();
 
                 Console.WriteLine($"Page {year} => {news.Count} news");
-                foreach (var remoteNews in news)
-                {
-                    yield return remoteNews;
-                }
+                allNews.AddRange( news );
             }
+
+            return allNews;
         }
 
         protected override RemoteNews ParseDocument(IDocument document, string url)

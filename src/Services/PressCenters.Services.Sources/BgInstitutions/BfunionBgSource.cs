@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
 
     /// <summary>
@@ -20,8 +20,10 @@
                 count: 5,
                 throwOnEmpty: false);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<List<RemoteNews>> GetAllPublications()
         {
+            var allNews = new List<RemoteNews>();
+
             for (var i = 40000; i <= 46260; i++)
             {
                 var remoteNews = this.GetPublication($"{this.BaseUrl}news/{i}/0");
@@ -32,8 +34,9 @@
                 }
 
                 Console.WriteLine($"№{i} => {remoteNews.PostDate.ToShortDateString()} => {remoteNews.Title}");
-                yield return remoteNews;
+                allNews.Add(remoteNews);
             }
+            return allNews;
         }
 
         internal override string ExtractIdFromUrl(string url)

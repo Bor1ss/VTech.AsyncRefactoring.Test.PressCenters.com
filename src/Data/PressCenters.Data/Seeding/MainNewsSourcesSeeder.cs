@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
+    using Microsoft.EntityFrameworkCore;
     using PressCenters.Data.Models;
 
     public class MainNewsSourcesSeeder : ISeeder
     {
-        public void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public async Task Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             var mainNewsSources = new List<(string Name, string Url, string TypeName)>
                                   {
@@ -44,7 +45,7 @@
 
             foreach (var mainNewsSource in mainNewsSources)
             {
-                if (!dbContext.MainNewsSources.Any(x => x.TypeName == mainNewsSource.TypeName))
+                if (!await dbContext.MainNewsSources.AnyAsync(x => x.TypeName == mainNewsSource.TypeName))
                 {
                     dbContext.MainNewsSources.Add(
                         new MainNewsSource
