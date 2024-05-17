@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Data.Seeding
+namespace PressCenters.Data.Seeding
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
 
@@ -8,7 +10,7 @@
 
     public static class ApplicationDbContextSeeder
     {
-        public static void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public static async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             if (dbContext == null)
             {
@@ -31,7 +33,7 @@
 
             foreach (var seeder in seeders)
             {
-                seeder.Seed(dbContext, serviceProvider);
+                await seeder.SeedAsync(dbContext, serviceProvider);
                 logger.LogInformation($"Seeder {seeder.GetType().Name} done.");
                 dbContext.SaveChanges();
             }

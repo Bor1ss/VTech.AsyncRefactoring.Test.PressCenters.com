@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.Ministries
+namespace PressCenters.Services.Sources.Ministries
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -25,22 +27,23 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications(this.NewsListUrl, this.NewsLinkSelector, count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             var address = $"{this.BaseUrl}{this.NewsListUrl}";
             var parser = new HtmlParser();
             var httpClient = new HttpClient();
             for (var i = 1; i <= this.NewsListPagesCount; i++)
             {
-                var response = httpClient.PostAsync(
+                var response = await httpClient.PostAsync(
                     address,
                     new FormUrlEncodedContent(
                         new List<KeyValuePair<string, string>>
                         {
                             new KeyValuePair<string, string>("page_no", i.ToString()),
                             new KeyValuePair<string, string>("page_size", "24"),
-                        })).GetAwaiter().GetResult();
-                var content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                        }));
+                var content = await response.Content.ReadAsStringAsync();
                 var document = parser.ParseDocument(content);
                 var links = document.QuerySelectorAll(this.NewsLinkSelector)
                     .Select(x => this.NormalizeUrl(x.Attributes["href"].Value)).Where(x => !new Uri(x).PathAndQuery.Contains(":")).Distinct()
@@ -49,9 +52,10 @@
                 Console.WriteLine($"№{i} => {news.Count} news ({news.DefaultIfEmpty().Min(x => x?.PostDate)} - {news.DefaultIfEmpty().Max(x => x?.PostDate)})");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
             }
+            return GetAllPublicationsResult;
         }
 
         internal override string ExtractIdFromUrl(string url)

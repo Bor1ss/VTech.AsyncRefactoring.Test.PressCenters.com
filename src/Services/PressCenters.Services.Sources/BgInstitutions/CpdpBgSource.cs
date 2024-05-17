@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgInstitutions
+namespace PressCenters.Services.Sources.BgInstitutions
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -18,17 +20,19 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("/", ".center-part h6 a.news-title");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             for (var i = 1; i < 1520; i++)
             {
                 var news = this.GetPublication($"https://www.cpdp.bg/index.php?p=news_view&aid={i}");
                 if (news != null)
                 {
-                    yield return news;
+                    GetAllPublicationsResult.Add(news);
                     Console.WriteLine($"{i} => {news.Title}");
                 }
             }
+            return GetAllPublicationsResult;
         }
 
         internal override string ExtractIdFromUrl(string url) => this.GetUrlParameterValue(url, "aid");

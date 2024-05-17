@@ -1,5 +1,7 @@
-﻿namespace Sandbox
+namespace Sandbox
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Diagnostics;
     using System.IO;
@@ -25,7 +27,7 @@
 
     public static class Program
     {
-        public static int Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.WriteLine($"{typeof(Program).Namespace} ({string.Join(" ", args)}) starts working...");
@@ -38,26 +40,26 @@
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 dbContext.Database.Migrate();
-                ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
+                await ApplicationDbContextSeeder.SeedAsync(dbContext, serviceScope.ServiceProvider);
             }
 
             using (var serviceScope = serviceProvider.CreateScope())
             {
                 serviceProvider = serviceScope.ServiceProvider;
-
-                return Parser.Default.ParseArguments<SandboxOptions>(args).MapResult(
-                    (SandboxOptions opts) => SandboxCode(opts, serviceProvider),
-                    _ => 255);
+                SandboxOptions opts = default;
+                Parser.Default.ParseArguments<SandboxOptions>(args).WithParsed(p => opts = p);
+                return await SandboxCodeAsync(opts, serviceProvider);
+                    
             }
         }
 
-        private static int SandboxCode(SandboxOptions options, IServiceProvider serviceProvider)
+        private static async Task<int> SandboxCodeAsync(SandboxOptions options, IServiceProvider serviceProvider)
         {
             var sw = Stopwatch.StartNew();
 
             //// serviceProvider.GetService<INewsService>().SaveImageLocallyAsync("https://prb.bg/upload/55508/%D0%93%D0%B5%D1%80%D0%B1+%D0%92%D0%B8%D1%82%D1%80%D0%B0%D0%B6.JPG", 191333, @"C:\Temp\wwwroot", false).GetAwaiter().GetResult();
             //// new UpdateSearchTextSandbox().Work(serviceProvider).GetAwaiter().GetResult();
-            new GetAllNewsSandbox().Work(serviceProvider).GetAwaiter().GetResult();
+            await new GetAllNewsSandbox().Work(serviceProvider);
             //// new DownloadImagesSandbox().Work(serviceProvider).GetAwaiter().GetResult();
 
             Console.WriteLine(sw.Elapsed);

@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.Tests.MainNews
+namespace PressCenters.Services.Sources.Tests.MainNews
 {
+    using System.Threading.Tasks;
+
     using PressCenters.Services.Sources.MainNews;
 
     using Xunit;
@@ -7,10 +9,10 @@
     public class NewsBntBgMainNewsProviderTests
     {
         [Fact]
-        public void GetMainNewsShouldWorkCorrectly()
+        public async Task GetMainNewsShouldWorkCorrectlyAsync()
         {
             var provider = new NewsBntBgMainNewsProvider();
-            var news = provider.GetMainNews();
+            var news = await provider.GetMainNewsAsync();
             Assert.NotNull(news.Title);
             Assert.True(news.Title.Length >= 10);
             Assert.Contains("bntnews.bg", news.OriginalUrl);

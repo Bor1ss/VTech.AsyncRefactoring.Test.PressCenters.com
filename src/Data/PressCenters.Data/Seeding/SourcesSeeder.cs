@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Data.Seeding
+namespace PressCenters.Data.Seeding
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -8,7 +10,7 @@
 
     public class SourcesSeeder : ISeeder
     {
-        public void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             var sources =
                 new

@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgInstitutions
+namespace PressCenters.Services.Sources.BgInstitutions
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
 
@@ -15,8 +17,9 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("news", ".news-summary-link");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             for (var page = 1; page <= 30; page++)
             {
                 var news = this.GetPublications($"news?page={page}", ".news-summary-link");
@@ -24,9 +27,10 @@
                 foreach (var remoteNews in news)
                 {
                     remoteNews.OriginalUrl = remoteNews.OriginalUrl.Split('?')[0];
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
             }
+            return GetAllPublicationsResult;
         }
 
         internal override string ExtractIdFromUrl(string url) => new Uri(url.Trim().Trim('/')).Segments[^1].Split('-')[1];

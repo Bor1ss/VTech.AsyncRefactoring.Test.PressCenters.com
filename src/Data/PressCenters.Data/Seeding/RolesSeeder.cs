@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Data.Seeding
+namespace PressCenters.Data.Seeding
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Linq;
 
@@ -11,20 +13,20 @@
 
     public class RolesSeeder : ISeeder
     {
-        public void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-            SeedRole(roleManager, GlobalConstants.AdministratorRoleName);
-            SeedRole(roleManager, GlobalConstants.ProUserRoleName);
+            await SeedRoleAsync(roleManager, GlobalConstants.AdministratorRoleName);
+            await SeedRoleAsync(roleManager, GlobalConstants.ProUserRoleName);
         }
 
-        private static void SeedRole(RoleManager<ApplicationRole> roleManager, string roleName)
+        private static async Task SeedRoleAsync(RoleManager<ApplicationRole> roleManager, string roleName)
         {
-            var role = roleManager.FindByNameAsync(roleName).GetAwaiter().GetResult();
+            var role = await roleManager.FindByNameAsync(roleName);
             if (role == null)
             {
-                var result = roleManager.CreateAsync(new ApplicationRole(roleName)).GetAwaiter().GetResult();
+                var result = await roleManager.CreateAsync(new ApplicationRole(roleName));
 
                 if (!result.Succeeded)
                 {

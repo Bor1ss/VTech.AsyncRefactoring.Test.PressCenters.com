@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.MainNews
+namespace PressCenters.Services.Sources.MainNews
 {
+    using System.Threading.Tasks;
+
     using System;
 
     public class BtaBgMainNewsProvider : BaseMainNewsProvider
@@ -8,9 +10,9 @@
 
         public override bool UseProxy => true;
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNewsAsync()
         {
-            var document = this.GetDocument(this.BaseUrl);
+            var document = await this.GetDocumentAsync(this.BaseUrl);
 
             var titleElement = document.QuerySelector(".leading-section .news-card__title a");
             var title = titleElement.TextContent.Trim().Trim('.').Trim();

@@ -1,5 +1,7 @@
-﻿namespace PressCenters.Services.Sources.BgInstitutions
+namespace PressCenters.Services.Sources.BgInstitutions
 {
+    using System.Threading.Tasks;
+
     using System;
     using System.Collections.Generic;
 
@@ -14,17 +16,19 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("?page_id=146", ".ps-live a", urlShouldContain: "?p=");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async Task<IEnumerable<RemoteNews>> GetAllPublicationsAsync()
         {
+            List<RemoteNews>GetAllPublicationsResult = new List<RemoteNews>();
             for (var i = 1; i <= 570; i++)
             {
                 var news = this.GetPublications($"paged={i}&page_id=146", ".ps-live a", urlShouldContain: "?p=");
                 Console.WriteLine($"Page {i} => {news.Count} news");
                 foreach (var remoteNews in news)
                 {
-                    yield return remoteNews;
+                    GetAllPublicationsResult.Add(remoteNews);
                 }
             }
+            return GetAllPublicationsResult;
         }
 
         internal override string ExtractIdFromUrl(string url) => this.GetUrlParameterValue(url, "p");
