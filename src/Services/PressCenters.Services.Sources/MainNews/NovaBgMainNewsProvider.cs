@@ -1,12 +1,14 @@
-﻿namespace PressCenters.Services.Sources.MainNews
+﻿using System.Threading.Tasks;
+
+namespace PressCenters.Services.Sources.MainNews
 {
     public class NovaBgMainNewsProvider : BaseMainNewsProvider
     {
         public override string BaseUrl { get; } = "https://nova.bg";
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNewsAsync()
         {
-            var document = this.GetDocument(this.BaseUrl);
+            var document = await this.GetDocumentAsync(this.BaseUrl);
 
             var titleElement = document.QuerySelector(".main-accent-wrapper .thumb-title h1 a");
             var title = titleElement.TextContent.Trim();

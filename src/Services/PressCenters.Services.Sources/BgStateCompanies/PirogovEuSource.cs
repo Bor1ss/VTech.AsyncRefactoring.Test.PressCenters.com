@@ -18,7 +18,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/novini_c61", ".main-content h4.news-card-title a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var page = 1; page <= 12; page++)
             {

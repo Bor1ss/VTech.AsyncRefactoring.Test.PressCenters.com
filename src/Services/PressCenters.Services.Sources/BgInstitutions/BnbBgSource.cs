@@ -23,7 +23,7 @@
             return news;
         }
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var year = 1998; year <= DateTime.UtcNow.Year; year++)
             {

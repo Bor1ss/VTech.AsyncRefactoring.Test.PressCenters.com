@@ -19,7 +19,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/novini.html", ".NewsSummaryLink a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var page = 1; page <= 92; page++)
             {

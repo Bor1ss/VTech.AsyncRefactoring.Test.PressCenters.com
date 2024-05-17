@@ -10,7 +10,7 @@
         public void GetMainNewsShouldWorkCorrectly()
         {
             var provider = new EuronewsMainNewsProvider();
-            var news = provider.GetMainNews();
+            var news = provider.GetMainNewsAsync().GetAwaiter().GetResult();
             Assert.NotNull(news.Title);
             Assert.True(news.Title.Length >= 10);
             Assert.Contains("euronews.com", news.OriginalUrl);

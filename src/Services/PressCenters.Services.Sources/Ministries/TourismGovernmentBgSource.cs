@@ -16,7 +16,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/kategorii/novini", "#main .node-article h2 a", "bg/kategorii/novini", 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var i = 0; i <= 105; i++)
             {

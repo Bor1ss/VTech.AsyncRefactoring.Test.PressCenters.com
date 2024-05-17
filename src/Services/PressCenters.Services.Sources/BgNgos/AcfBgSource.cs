@@ -17,7 +17,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/pres-syobshteniya/", ".padding-bottom-80 a.white-red-btn");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var i = 1; i <= 26; i++)
             {

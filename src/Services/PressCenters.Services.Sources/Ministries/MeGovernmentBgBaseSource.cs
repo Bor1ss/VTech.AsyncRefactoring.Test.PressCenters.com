@@ -22,7 +22,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications(this.NewsListUrl, ".listing-article h2 a");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var i = 1; i <= this.NewsListPagesCount; i++)
             {

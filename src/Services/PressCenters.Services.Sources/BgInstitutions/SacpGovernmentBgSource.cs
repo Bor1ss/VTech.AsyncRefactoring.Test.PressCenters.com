@@ -16,7 +16,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("новини", ".view-content a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var i = 0; i <= 92; i++)
             {

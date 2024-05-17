@@ -28,8 +28,8 @@
 
                 var sourceProvider = ReflectionHelpers.GetInstance<BaseSource>(source.TypeName);
                 Console.WriteLine($"Starting {source.TypeName}.GetAllPublications...");
-                var news = sourceProvider.GetAllPublications();
-                foreach (var remoteNews in news)
+                var news = sourceProvider.GetAllPublicationsAsync();
+                await  foreach (var remoteNews in news)
                 {
                     var newsId = await newsService.AddAsync(remoteNews, source.Id);
                     if (newsId.HasValue)

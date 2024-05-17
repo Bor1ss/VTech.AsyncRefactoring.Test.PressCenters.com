@@ -1,18 +1,15 @@
 ﻿namespace PressCenters.Services.Sources.MainNews
-{
-    using System.Net.Http;
+{ 
+    using System.Threading.Tasks;
 
-    using AngleSharp.Html.Parser;
-
-    using Newtonsoft.Json;
 
     public class CnnMainNewsProvider : BaseMainNewsProvider
     {
         public override string BaseUrl => "https://edition.cnn.com";
 
-        public override RemoteMainNews GetMainNews()
+        public override async Task<RemoteMainNews> GetMainNewsAsync()
         {
-            var document = this.GetDocument(this.BaseUrl);
+            var document = await this.GetDocumentAsync(this.BaseUrl);
 
             var titleElement = document.QuerySelector(".container_lead-package__title_url-text");
             var title = titleElement.TextContent.Trim().Trim('.').Trim();

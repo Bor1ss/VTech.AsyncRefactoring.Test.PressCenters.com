@@ -3,13 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using PressCenters.Data.Models;
 
     public class SourcesSeeder : ISeeder
     {
-        public void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
+            await Task.CompletedTask;
             var sources =
                 new
                 List<(string TypeName, string ShortName, string Name, string Description, string Url, string DefaultImageUrl)>

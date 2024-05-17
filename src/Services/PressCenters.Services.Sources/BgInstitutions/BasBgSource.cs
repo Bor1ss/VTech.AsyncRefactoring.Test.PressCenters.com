@@ -13,7 +13,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications(string.Empty, ".fusion-recent-posts article.post h4 a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var page = 1; page <= 36; page++)
             {

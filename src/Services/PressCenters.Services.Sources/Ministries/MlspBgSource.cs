@@ -19,7 +19,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("novini", ".post__widget .post__title a");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var page = 1; page <= 10; page++)
             {

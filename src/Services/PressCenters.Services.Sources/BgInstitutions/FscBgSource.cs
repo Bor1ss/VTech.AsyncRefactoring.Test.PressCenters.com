@@ -14,7 +14,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("?page_id=146", ".ps-live a", urlShouldContain: "?p=");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var i = 1; i <= 570; i++)
             {

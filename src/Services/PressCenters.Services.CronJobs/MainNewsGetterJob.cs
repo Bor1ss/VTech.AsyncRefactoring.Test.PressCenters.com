@@ -53,7 +53,7 @@
                 RemoteMainNews news;
                 try
                 {
-                    news = instance.GetMainNews();
+                    news = await instance.GetMainNewsAsync();
                 }
                 catch (Exception e)
                 {

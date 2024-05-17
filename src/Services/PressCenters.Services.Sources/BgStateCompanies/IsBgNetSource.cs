@@ -16,7 +16,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("bg/news", ".news a");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             this.Headers = new List<(string Header, string Value)> { ("x-requested-with", "XMLHttpRequest") };
             for (var i = 1; i <= 25; i++)

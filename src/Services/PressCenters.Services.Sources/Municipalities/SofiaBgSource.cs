@@ -16,7 +16,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications("news", ".portlet-body .row .row a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             var newsCategories = new (string Url, string Instance)[]
                                      {

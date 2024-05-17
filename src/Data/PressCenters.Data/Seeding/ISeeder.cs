@@ -1,9 +1,10 @@
 ﻿namespace PressCenters.Data.Seeding
 {
     using System;
+    using System.Threading.Tasks;
 
     public interface ISeeder
     {
-        void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider);
+        Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider);
     }
 }

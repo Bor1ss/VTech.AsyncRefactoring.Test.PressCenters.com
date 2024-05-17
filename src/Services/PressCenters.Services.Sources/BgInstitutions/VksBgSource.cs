@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using System.Linq;
     using AngleSharp.Dom;
     using PressCenters.Common;
 
@@ -17,8 +17,14 @@
         public override IEnumerable<RemoteNews> GetLatestPublications()
             => this.GetPublications("novini.html", "#Content p a", count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
-            => this.GetPublications("novini.html", "#Content p a");
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
+        {
+            var t = this.GetPublications("novini.html", "#Content p a");
+            foreach (var i in t)
+            {
+                yield return i;
+            }
+        }
 
         internal override string ExtractIdFromUrl(string url) => url.GetLastStringBetween("/", ".html", url);
 

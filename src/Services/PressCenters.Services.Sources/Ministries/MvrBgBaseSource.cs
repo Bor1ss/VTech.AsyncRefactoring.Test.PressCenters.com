@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
     using AngleSharp.Html.Parser;
 
@@ -25,22 +25,23 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetPublications(this.NewsListUrl, this.NewsLinkSelector, count: 5);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             var address = $"{this.BaseUrl}{this.NewsListUrl}";
             var parser = new HtmlParser();
             var httpClient = new HttpClient();
             for (var i = 1; i <= this.NewsListPagesCount; i++)
             {
-                var response = httpClient.PostAsync(
+                var response = await httpClient.PostAsync(
                     address,
                     new FormUrlEncodedContent(
                         new List<KeyValuePair<string, string>>
                         {
                             new KeyValuePair<string, string>("page_no", i.ToString()),
                             new KeyValuePair<string, string>("page_size", "24"),
-                        })).GetAwaiter().GetResult();
-                var content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                        }));
+
+                var content = await response.Content.ReadAsStringAsync();
                 var document = parser.ParseDocument(content);
                 var links = document.QuerySelectorAll(this.NewsLinkSelector)
                     .Select(x => this.NormalizeUrl(x.Attributes["href"].Value)).Where(x => !new Uri(x).PathAndQuery.Contains(":")).Distinct()

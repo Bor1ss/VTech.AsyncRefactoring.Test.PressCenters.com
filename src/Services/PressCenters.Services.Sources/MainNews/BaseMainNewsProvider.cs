@@ -2,7 +2,7 @@
 {
     using System;
     using System.Net.Http;
-
+    using System.Threading.Tasks;
     using AngleSharp.Dom;
     using AngleSharp.Html.Parser;
 
@@ -14,9 +14,9 @@
 
         public virtual bool UseProxy => false;
 
-        public abstract RemoteMainNews GetMainNews();
+        public abstract Task<RemoteMainNews> GetMainNewsAsync();
 
-        public IDocument GetDocument(string url)
+        public async Task<IDocument> GetDocumentAsync(string url)
         {
             url = new Uri(url).GetLeftPart(UriPartial.Query); // Remove hash fragment
             if (this.UseProxy)
@@ -30,8 +30,8 @@
             httpClient.DefaultRequestHeaders.Add("User-Agent", GlobalConstants.DefaultUserAgent);
             //// httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
             //// httpClient.DefaultRequestHeaders.Add("accept-language", "bg,en-US;q=0.9,en;q=0.8");
-            var request = httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, url) { Version = new Version(2, 0) }).GetAwaiter().GetResult();
-            var html = request.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var request = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, url) { Version = new Version(2, 0) });
+            var html = await request.Content.ReadAsStringAsync();
             var document = parser.ParseDocument(html);
             return document;
         }

@@ -21,7 +21,7 @@
                 "#DivEventList .RadGridItem h3 a",
                 "Pages/Press/News/Default.aspx");
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var i = 1; i <= 4089; i++)
             {

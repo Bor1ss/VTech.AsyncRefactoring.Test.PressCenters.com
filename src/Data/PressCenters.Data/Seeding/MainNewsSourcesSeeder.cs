@@ -3,13 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using PressCenters.Data.Models;
 
     public class MainNewsSourcesSeeder : ISeeder
     {
-        public void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
+            await Task.CompletedTask;
             var mainNewsSources = new List<(string Name, string Url, string TypeName)>
                                   {
                                       ("БНТ", "https://bntnews.bg",
@@ -55,6 +56,8 @@
                         });
                 }
             }
+
+            
         }
     }
 }

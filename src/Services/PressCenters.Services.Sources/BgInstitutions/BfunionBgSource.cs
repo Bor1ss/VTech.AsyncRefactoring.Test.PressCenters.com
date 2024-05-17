@@ -20,7 +20,7 @@
                 count: 5,
                 throwOnEmpty: false);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var i = 40000; i <= 46260; i++)
             {

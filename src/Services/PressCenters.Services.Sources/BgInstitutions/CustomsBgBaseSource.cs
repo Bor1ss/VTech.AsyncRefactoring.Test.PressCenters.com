@@ -25,7 +25,7 @@
         public override IEnumerable<RemoteNews> GetLatestPublications() =>
             this.GetNews(DateTime.UtcNow.AddMonths(-2), DateTime.UtcNow.AddDays(1), 6);
 
-        public override IEnumerable<RemoteNews> GetAllPublications()
+        public override async IAsyncEnumerable<RemoteNews> GetAllPublicationsAsync()
         {
             for (var year = 2015; year <= 2019; year++)
             {
